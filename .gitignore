@@ -1,0 +1,51 @@
+## .NET
+bin/
+obj/
+*.user
+*.suo
+.vs/
+*.swp
+*~
+
+## Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+## NuGet
+*.nupkg
+*.snupkg
+.nuget/packages/
+packages/
+
+## Visual Studio
+.vs/
+*.rsuser
+*.userosscache
+*.sln.docstates
+
+## User-specific files
+*.userprefs
+*.dbmdl
+*.jfm
+
+## Rider IDE
+.idea/
+*.sln.iml
+
+## Environment
+.env
+.env.local
+*.local
+
+## OS
+.DS_Store
+Thumbs.db
