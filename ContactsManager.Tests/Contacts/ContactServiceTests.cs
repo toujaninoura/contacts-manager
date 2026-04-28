@@ -94,6 +94,7 @@ public class ContactServiceTests
         var contact = new Contact("Dupont", "Jean", "jean@example.com", "0601020304", 1);
         var dto = new ContactDto(contact.Id, contact.Nom, contact.Prenom, contact.Email, contact.Telephone, contact.UserId, contact.CreatedAt, contact.UpdatedAt);
 
+        _contactRepositoryMock.Setup(r => r.EmailExistsAsync("jean@example.com", null)).ReturnsAsync(false);
         _mapperMock.Setup(m => m.Map<Contact>(createDto)).Returns(contact);
         _contactRepositoryMock.Setup(r => r.CreateAsync(contact)).ReturnsAsync(contact);
         _mapperMock.Setup(m => m.Map<ContactDto>(contact)).Returns(dto);
@@ -103,6 +104,20 @@ public class ContactServiceTests
         result.Success.Should().BeTrue();
         result.Data.Should().NotBeNull();
         result.Data!.Email.Should().Be("jean@example.com");
+    }
+
+    [Test]
+    public async Task CreateAsync_should_return_fail_when_email_already_exists()
+    {
+        var createDto = new CreateContactDto("Dupont", "Jean", "existing@example.com", null, 1);
+
+        _contactRepositoryMock.Setup(r => r.EmailExistsAsync("existing@example.com", null)).ReturnsAsync(true);
+
+        var result = await _contactService.CreateAsync(createDto);
+
+        result.Success.Should().BeFalse();
+        result.Message.Should().Contain("Email deja utilise");
+        _contactRepositoryMock.Verify(r => r.CreateAsync(It.IsAny<Contact>()), Times.Never);
     }
 
     // ---- UpdateAsync ----
@@ -116,6 +131,7 @@ public class ContactServiceTests
         var dto = new ContactDto(updated.Id, updated.Nom, updated.Prenom, updated.Email, updated.Telephone, updated.UserId, updated.CreatedAt, updated.UpdatedAt);
 
         _contactRepositoryMock.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(existing);
+        _contactRepositoryMock.Setup(r => r.EmailExistsAsync("jean@example.com", 1)).ReturnsAsync(false);
         _contactRepositoryMock.Setup(r => r.UpdateAsync(It.IsAny<Contact>())).ReturnsAsync(updated);
         _mapperMock.Setup(m => m.Map<ContactDto>(updated)).Returns(dto);
 
@@ -124,6 +140,22 @@ public class ContactServiceTests
         result.Success.Should().BeTrue();
         result.Data.Should().NotBeNull();
         result.Data!.Prenom.Should().Be("Jean-Pierre");
+    }
+
+    [Test]
+    public async Task UpdateAsync_should_return_fail_when_email_already_used_by_another_contact()
+    {
+        var updateDto = new UpdateContactDto("Dupont", "Jean", "taken@example.com", null);
+        var existing = new Contact("Dupont", "Jean", "jean@example.com", null, 1);
+
+        _contactRepositoryMock.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(existing);
+        _contactRepositoryMock.Setup(r => r.EmailExistsAsync("taken@example.com", 1)).ReturnsAsync(true);
+
+        var result = await _contactService.UpdateAsync(1, updateDto);
+
+        result.Success.Should().BeFalse();
+        result.Message.Should().Contain("Email deja utilise");
+        _contactRepositoryMock.Verify(r => r.UpdateAsync(It.IsAny<Contact>()), Times.Never);
     }
 
     [Test]

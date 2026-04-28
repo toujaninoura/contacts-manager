@@ -60,6 +60,8 @@ public class ContactController : ControllerBase
         _logger.LogInformation("POST /api/contacts email={Email}", dto.Email);
 
         var response = await _contactService.CreateAsync(dto);
+        if (!response.Success)
+            return BadRequest(response);
         return CreatedAtAction(nameof(GetById), new { id = response.Data!.Id }, response);
     }
 
@@ -75,6 +77,8 @@ public class ContactController : ControllerBase
         try
         {
             var response = await _contactService.UpdateAsync(id, dto);
+            if (!response.Success)
+                return BadRequest(response);
             return Ok(response);
         }
         catch (NotFoundException ex)

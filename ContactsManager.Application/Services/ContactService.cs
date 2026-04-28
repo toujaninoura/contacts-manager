@@ -63,6 +63,13 @@ public class ContactService : IContactService
     {
         _logger.LogInformation("Creating contact email={Email}", dto.Email);
 
+        var emailExists = await _contactRepository.EmailExistsAsync(dto.Email, null);
+        if (emailExists)
+        {
+            _logger.LogWarning("Create contact failed: email already in use - {Email}", dto.Email);
+            return ApiResponse<ContactDto>.Fail("Email deja utilise.");
+        }
+
         var contact = _mapper.Map<Contact>(dto);
         var created = await _contactRepository.CreateAsync(contact);
 
@@ -81,6 +88,13 @@ public class ContactService : IContactService
         {
             _logger.LogWarning("Contact id={Id} not found for update", id);
             throw new NotFoundException(nameof(Contact), id);
+        }
+
+        var emailExists = await _contactRepository.EmailExistsAsync(dto.Email, id);
+        if (emailExists)
+        {
+            _logger.LogWarning("Update contact id={Id} failed: email already in use - {Email}", id, dto.Email);
+            return ApiResponse<ContactDto>.Fail("Email deja utilise.");
         }
 
         var updated = existing.WithUpdate(dto.Nom, dto.Prenom, dto.Email, dto.Telephone);

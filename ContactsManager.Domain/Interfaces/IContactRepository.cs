@@ -10,4 +10,5 @@ public interface IContactRepository
     Task<Contact> UpdateAsync(Contact contact);
     Task DeleteAsync(int id);
     Task<bool> ExistsAsync(int id);
+    Task<bool> EmailExistsAsync(string email, int? excludeId = null);
 }
