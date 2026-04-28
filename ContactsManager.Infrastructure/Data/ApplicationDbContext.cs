@@ -38,6 +38,10 @@ public class ApplicationDbContext : DbContext
             entity.Property(c => c.Telephone).HasMaxLength(20);
             entity.Property(c => c.CreatedAt).IsRequired();
             entity.Property(c => c.UpdatedAt).IsRequired();
+            entity.HasOne<User>()
+                  .WithMany()
+                  .HasForeignKey(c => c.UserId)
+                  .OnDelete(DeleteBehavior.Cascade);
         });
     }
 }
