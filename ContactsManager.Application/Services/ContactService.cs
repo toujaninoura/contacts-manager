@@ -92,7 +92,7 @@ public class ContactService : IContactService
         return ApiResponse<ContactDto>.Ok(contactDto, "Contact mis a jour avec succes.");
     }
 
-    public async Task DeleteAsync(int id)
+    public async Task<ApiResponse<bool>> DeleteAsync(int id)
     {
         _logger.LogInformation("Deleting contact id={Id}", id);
 
@@ -105,5 +105,6 @@ public class ContactService : IContactService
 
         await _contactRepository.DeleteAsync(id);
         _logger.LogInformation("Contact id={Id} deleted successfully", id);
+        return ApiResponse<bool>.Ok(true, "Contact supprime avec succes.");
     }
 }

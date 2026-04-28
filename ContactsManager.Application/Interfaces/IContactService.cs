@@ -9,5 +9,5 @@ public interface IContactService
     Task<ApiResponse<ContactDto>> GetByIdAsync(int id);
     Task<ApiResponse<ContactDto>> CreateAsync(CreateContactDto dto);
     Task<ApiResponse<ContactDto>> UpdateAsync(int id, UpdateContactDto dto);
-    Task DeleteAsync(int id);
+    Task<ApiResponse<bool>> DeleteAsync(int id);
 }

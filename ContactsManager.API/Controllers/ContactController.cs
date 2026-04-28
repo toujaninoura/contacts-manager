@@ -94,7 +94,7 @@ public class ContactController : ControllerBase
 
         try
         {
-            await _contactService.DeleteAsync(id);
+            var response = await _contactService.DeleteAsync(id);
             return NoContent();
         }
         catch (NotFoundException ex)
