@@ -66,4 +66,11 @@ public class ContactRepository : IContactRepository
             .AsNoTracking()
             .AnyAsync(c => c.Id == id);
     }
+
+    public async Task<bool> EmailExistsAsync(string email, int? excludeId = null)
+    {
+        return await _context.Contacts
+            .AsNoTracking()
+            .AnyAsync(c => c.Email == email && (excludeId == null || c.Id != excludeId));
+    }
 }
