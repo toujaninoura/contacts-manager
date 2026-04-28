@@ -1,5 +1,9 @@
 using AutoMapper;
+using ContactsManager.Application.Interfaces;
+using ContactsManager.Application.Services;
+using ContactsManager.Domain.Interfaces;
 using ContactsManager.Infrastructure.Data;
+using ContactsManager.Infrastructure.Repositories;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -22,6 +26,8 @@ public static class ServiceCollectionExtensions
                 sqlOptions => sqlOptions.MigrationsAssembly(
                     typeof(ApplicationDbContext).Assembly.FullName)));
 
+        services.AddScoped<IAuthRepository, AuthRepository>();
+
         return services;
     }
 
@@ -35,6 +41,8 @@ public static class ServiceCollectionExtensions
         services.AddFluentValidationAutoValidation();
         services.AddValidatorsFromAssembly(
             typeof(ContactsManager.Application.Common.ApiResponse<>).Assembly);
+
+        services.AddScoped<IAuthService, AuthService>();
 
         return services;
     }
