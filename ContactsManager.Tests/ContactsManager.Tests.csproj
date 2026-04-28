@@ -31,7 +31,6 @@
   <ItemGroup>
     <ProjectReference Include="..\ContactsManager.Application\ContactsManager.Application.csproj" />
     <ProjectReference Include="..\ContactsManager.Domain\ContactsManager.Domain.csproj" />
-    <ProjectReference Include="..\ContactsManager.Infrastructure\ContactsManager.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
