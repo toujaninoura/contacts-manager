@@ -27,6 +27,7 @@ public static class ServiceCollectionExtensions
                     typeof(ApplicationDbContext).Assembly.FullName)));
 
         services.AddScoped<IAuthRepository, AuthRepository>();
+        services.AddScoped<IContactRepository, ContactRepository>();
 
         return services;
     }
@@ -43,6 +44,7 @@ public static class ServiceCollectionExtensions
             typeof(ContactsManager.Application.Common.ApiResponse<>).Assembly);
 
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IContactService, ContactService>();
 
         return services;
     }
